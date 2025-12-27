@@ -20,6 +20,11 @@ class ApiService {
         'password': password,
       });
       return response.data['token'];
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError || e.type == DioExceptionType.unknown) {
+         throw Exception('No Internet Connection. Please check your network.');
+      }
+      throw Exception('Failed to login: ${e.response?.data ?? e.message}');
     } catch (e) {
       throw Exception('Failed to login: $e');
     }
@@ -48,8 +53,13 @@ class ApiService {
         }, 
         'phone': '1-570-236-7033'
       });
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError || e.type == DioExceptionType.unknown) {
+         throw Exception('No Internet Connection. Please check your network.');
+      }
+      throw Exception('Failed to sign up: ${e.response?.data ?? e.message}');
     } catch (e) {
-      throw Exception('Failed to sign up: $e');
+       throw Exception('Failed to sign up: $e');
     }
   }
 

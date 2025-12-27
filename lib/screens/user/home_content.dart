@@ -18,12 +18,11 @@ class HomeContent extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Categories List
-          Padding(
+    return CustomScrollView(
+      slivers: [
+        // Categories List (Horizontal)
+        SliverToBoxAdapter(
+          child: Padding(
             padding: const EdgeInsets.all(AppConstants.paddingSmall),
             child: SizedBox(
               height: 50,
@@ -45,29 +44,29 @@ class HomeContent extends StatelessWidget {
               ),
             ),
           ),
-          
-          const Divider(),
+        ),
+        
+        const SliverToBoxAdapter(child: Divider()),
 
-          // Products Grid
-          Padding(
-            padding: const EdgeInsets.all(AppConstants.paddingSmall),
-            child: GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                 crossAxisCount: 2,
-                 childAspectRatio: 0.7,
-                 crossAxisSpacing: 10,
-                 mainAxisSpacing: 10,
-              ),
-              itemCount: products.length,
-              itemBuilder: (context, index) {
+        // Products Grid
+        SliverPadding(
+          padding: const EdgeInsets.all(AppConstants.paddingSmall),
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.7,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
                 return ProductCard(product: products[index]);
               },
+              childCount: products.length,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
