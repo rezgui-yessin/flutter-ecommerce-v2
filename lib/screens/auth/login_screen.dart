@@ -12,8 +12,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController(text: 'mor_2314'); // Default for demo
-  final _passwordController = TextEditingController(text: '83r5^_'); // Default for demo
+  final _usernameController = TextEditingController(text: 'mor_2314');
+  final _passwordController = TextEditingController(text: '83r5^_');
   
   @override
   void dispose() {
@@ -35,7 +35,11 @@ class _LoginScreenState extends State<LoginScreen> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Login failed: ${e.toString()}')),
+            SnackBar(
+              content: Text('Login failed: ${e.toString().replaceAll("Exception:", "")}'),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+            ),
           );
         }
       }
@@ -45,62 +49,145 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading = Provider.of<AuthProvider>(context).isLoading;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: _usernameController,
-                decoration: const InputDecoration(
-                  labelText: 'Username',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Header Section
+            Container(
+              height: 250,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: isDark 
+                      ? [AppColors.primaryDark, Colors.deepPurple.shade900]
+                      : [AppColors.primaryLight, Colors.deepPurple.shade300],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                validator: (value) => value!.isEmpty ? 'Please enter username' : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
                 ),
-                obscureText: true,
-                validator: (value) => value!.isEmpty ? 'Please enter password' : null,
               ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: isLoading ? null : _login,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
-                  ),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.shopping_bag, size: 80, color: Colors.white),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Welcome Back!',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Login to your account',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white.withOpacity(0.9),
+                      ),
+                    ),
+                  ],
                 ),
-                child: isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text('Login'),
               ),
-              const SizedBox(height: 16),
-               TextButton(
-                onPressed: () {
-                   // Mock forgot password
-                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Reset password functionality is mock.')),
-                  );
-                },
-                child: const Text('Forgot Password?'),
+            ),
+            
+            // Form Section
+            Padding(
+              padding: const EdgeInsets.all(AppConstants.paddingLarge),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _usernameController,
+                      decoration: InputDecoration(
+                        labelText: 'Username',
+                        hintText: 'Enter your username',
+                        prefixIcon: const Icon(Icons.person_outline),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: isDark ? Colors.grey[800] : Colors.grey[100],
+                      ),
+                      validator: (value) => value!.isEmpty ? 'Please enter username' : null,
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Enter your password',
+                        prefixIcon: const Icon(Icons.lock_outline),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                         fillColor: isDark ? Colors.grey[800] : Colors.grey[100],
+                      ),
+                      validator: (value) => value!.isEmpty ? 'Please enter password' : null,
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: const Text('Forgot Password?'),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    ElevatedButton(
+                      onPressed: isLoading ? null : _login,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isDark ? AppColors.primaryDark : AppColors.primaryLight,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
+                        ),
+                      ),
+                      child: isLoading
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                            )
+                          : const Text(
+                              'LOGIN',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 1),
+                            ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Don't have an account?"),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pushReplacementNamed('/signup');
+                          },
+                          child: const Text('Sign Up', style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
