@@ -103,4 +103,32 @@ class ApiService {
       throw Exception('Failed to load category products: $e');
     }
   }
+
+  Future<Product> addProduct(Map<String, dynamic> productData) async {
+    try {
+      final response = await _dio.post('/products', data: productData);
+      // FakeStoreAPI returns the object with a NEW ID
+      return Product.fromJson({...productData, 'id': response.data['id']});
+    } catch (e) {
+      throw Exception('Failed to add product: $e');
+    }
+  }
+
+  Future<Product> updateProduct(int id, Map<String, dynamic> productData) async {
+    try {
+      // FakeStoreAPI just echoes back the data
+      await _dio.put('/products/$id', data: productData);
+      return Product.fromJson({...productData, 'id': id});
+    } catch (e) {
+      throw Exception('Failed to update product: $e');
+    }
+  }
+
+  Future<void> deleteProduct(int id) async {
+    try {
+      await _dio.delete('/products/$id');
+    } catch (e) {
+      throw Exception('Failed to delete product: $e');
+    }
+  }
 }

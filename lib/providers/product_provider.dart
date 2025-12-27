@@ -144,4 +144,83 @@ class ProductProvider extends ChangeNotifier {
       return product.title.toLowerCase().contains(query.toLowerCase());
     }).take(5).toList();
   }
+
+  Future<void> addProduct(Product product) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      // API Call
+      // We still call the API to simulate the network request
+      final apiResponseProduct = await _apiService.addProduct(product.toJson());
+      
+      // FIX For FakeStoreAPI: It always returns ID 21 for new products.
+      // We must assign a unique local ID to ensure UI updates (Delete/Edit) work correctly in this session.
+      final uniqueId = DateTime.now().millisecondsSinceEpoch;
+      final newProduct = Product(
+        id: uniqueId,
+        title: apiResponseProduct.title,
+        price: apiResponseProduct.price,
+        description: apiResponseProduct.description,
+        category: apiResponseProduct.category,
+        image: apiResponseProduct.image,
+        rating: apiResponseProduct.rating,
+      );
+
+      // Local State Update
+      _products.add(newProduct);
+      
+      // Also update category list if new category
+      if (!_categories.contains(newProduct.category)) {
+        _categories.add(newProduct.category);
+      }
+      notifyListeners();
+    } catch (e) {
+      print('Error adding product: $e');
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateProduct(int id, Product product) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      // API Call
+      final updatedProduct = await _apiService.updateProduct(id, product.toJson());
+      
+      // Local State Update
+      final index = _products.indexWhere((p) => p.id == id);
+      if (index != -1) {
+        _products[index] = updatedProduct;
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Error updating product: $e');
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> deleteProduct(int id) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      // API Call
+      await _apiService.deleteProduct(id);
+      
+      // Local State Update
+      _products.removeWhere((p) => p.id == id);
+      notifyListeners();
+    } catch (e) {
+      print('Error deleting product: $e');
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }
