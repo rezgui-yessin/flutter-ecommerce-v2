@@ -31,13 +31,21 @@ class HomeContent extends StatelessWidget {
                 itemCount: categories.length + 1,
                 itemBuilder: (context, index) {
                   final category = index == 0 ? 'All' : categories[index - 1];
+                  final isSelected = productProvider.selectedCategory == category;
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: ActionChip(
+                    child: ChoiceChip(
                       label: Text(category.toUpperCase()),
-                      onPressed: () {
-                        productProvider.filterByCategory(category);
+                      selected: isSelected,
+                      onSelected: (bool selected) {
+                        if (selected) {
+                           productProvider.filterByCategory(category);
+                        }
                       },
+                      selectedColor: Theme.of(context).primaryColor,
+                      labelStyle: TextStyle(
+                        color: isSelected ? Colors.white : Colors.black,
+                      ),
                     ),
                   );
                 },
