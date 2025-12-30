@@ -90,3 +90,44 @@ class Address {
     };
   }
 }
+
+// Simplified User Model for Database Operations
+class UserModel {
+  final int? id;
+  final String username;
+  final String password;
+  final String email;
+  final String firstname;
+  final String lastname;
+
+  UserModel({
+    this.id,
+    required this.username,
+    required this.password,
+    required this.email,
+    required this.firstname,
+    required this.lastname,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (id != null) 'id': id,
+      'username': username,
+      'password': password,
+      'email': email,
+      'firstname': firstname,
+      'lastname': lastname,
+    };
+  }
+
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['id'] as int?,
+      username: json['username'] as String,
+      password: json['password'] as String,
+      email: json['email'] as String,
+      firstname: json['firstname'] as String,
+      lastname: json['lastname'] as String,
+    );
+  }
+}
