@@ -16,6 +16,7 @@ import 'screens/user/checkout_screen.dart';
 import 'screens/user/profile_screen.dart';
 import 'screens/admin/admin_dashboard.dart';
 import 'screens/landing_page.dart';
+import 'screens/admin/admin_login_screen.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'services/notification_service.dart';
@@ -72,6 +73,7 @@ class FinShopApp extends StatelessWidget {
               '/profile': (context) => const ProfileScreen(),
               '/checkout': (context) => const CheckoutScreen(),
               '/admin': (context) => const AdminDashboard(),
+              '/admin_login': (context) => const AdminLoginScreen(),
             },
           );
         },

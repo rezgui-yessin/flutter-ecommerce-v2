@@ -148,11 +148,23 @@ class LandingPage extends StatelessWidget {
                   ),
                   
                   const SizedBox(height: 24),
-                  
+
+                  // Features Section
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildFeatureItem(context, Icons.local_shipping_outlined, 'Free Shipping'),
+                      _buildFeatureItem(context, Icons.verified_user_outlined, 'Secure Pay'),
+                      _buildFeatureItem(context, Icons.support_agent, '24/7 Support'),
+                    ],
+                  ),
+
+                  const SizedBox(height: 48),
+
                   // Admin Demo Link (Keep it discrete but accessible)
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed('/admin');
+                      Navigator.of(context).pushNamed('/admin_login');
                     },
                     child: Text(
                       'Admin Access',
@@ -162,7 +174,7 @@ class LandingPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 20),
                 ],
               ),
@@ -170,6 +182,30 @@ class LandingPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFeatureItem(BuildContext context, IconData icon, String label) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.primaryLight.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, color: AppColors.primaryLight, size: 28),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).textTheme.bodyMedium?.color,
+          ),
+        ),
+      ],
     );
   }
 }
