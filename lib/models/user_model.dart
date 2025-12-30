@@ -25,6 +25,17 @@ class User {
       phone: json['phone'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'username': username,
+      'name': name.toJson(),
+      'address': address.toJson(),
+      'phone': phone,
+    };
+  }
 }
 
 class Name {
@@ -38,6 +49,13 @@ class Name {
       firstname: json['firstname'],
       lastname: json['lastname'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'firstname': firstname,
+      'lastname': lastname,
+    };
   }
 }
 
@@ -61,5 +79,14 @@ class Address {
       number: json['number'],
       zipcode: json['zipcode'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'city': city,
+      'street': street,
+      'number': number,
+      'zipcode': zipcode,
+    };
   }
 }

@@ -131,4 +131,43 @@ class ApiService {
       throw Exception('Failed to delete product: $e');
     }
   }
+
+  // --- Users ---
+
+  Future<List<User>> getUsers() async {
+    try {
+      final response = await _dio.get('/users');
+      List<dynamic> data = response.data;
+      return data.map((json) => User.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to load users: $e');
+    }
+  }
+
+  Future<User> addUser(Map<String, dynamic> userData) async {
+    try {
+      final response = await _dio.post('/users', data: userData);
+      // FakeStoreAPI returns the ID
+      return User.fromJson({...userData, 'id': response.data['id']});
+    } catch (e) {
+      throw Exception('Failed to add user: $e');
+    }
+  }
+
+  Future<User> updateUser(int id, Map<String, dynamic> userData) async {
+    try {
+      await _dio.put('/users/$id', data: userData);
+      return User.fromJson({...userData, 'id': id});
+    } catch (e) {
+      throw Exception('Failed to update user: $e');
+    }
+  }
+
+  Future<void> deleteUser(int id) async {
+    try {
+      await _dio.delete('/users/$id');
+    } catch (e) {
+      throw Exception('Failed to delete user: $e');
+    }
+  }
 }
