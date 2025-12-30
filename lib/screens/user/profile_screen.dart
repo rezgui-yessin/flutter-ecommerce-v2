@@ -32,7 +32,15 @@ class ProfileScreen extends StatelessWidget {
             },
           ),
           const SizedBox(height: 8),
-          const Text('user@example.com'), // Mock email as we don't store it in basic auth flow
+          FutureBuilder<String?>(
+            future: authProvider.getEmail(),
+            builder: (context, snapshot) {
+              return Text(
+                snapshot.data ?? 'No email',
+                style: TextStyle(color: Colors.grey.shade600),
+              );
+            },
+          ),
           const SizedBox(height: 32),
           
           Card(
