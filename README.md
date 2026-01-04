@@ -305,7 +305,7 @@ The app integrates with **Fake Store API** for initial product data:
 
 This project is created for educational purposes.
 
-## 👨‍💻 Author
+## 👨‍💻 Yessin Rezgui
 
 Created as a Flutter e-commerce demonstration project.
 
